@@ -8,5 +8,5 @@ text = open(r"F:/VS Code Workspace of python/红楼梦ANSI.txt","r",encoding="AN
 list_text=list(text)
 word_list=[" ".join(jieba.cut(i) for i in list_text)]
 new_text=' '.join(word_list)
-
+#####
 mask=imread("")
