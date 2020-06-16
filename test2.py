@@ -2,6 +2,7 @@
 import jieba
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
+import pandas as pd
 
 s1 = """在克鲁伊夫时代，巴萨联赛中完成了四连冠，后三个冠军都是在末轮逆袭获得的。在 91/92 赛季，
         巴萨末轮前落后皇马
@@ -34,13 +35,17 @@ plt.imshow(wordcloud)
 plt.axis("off")
 plt.show()
 #########################
-text=open(r"F:/VS Code Workspace of python/红楼梦ANSI.txt","r",encoding="ANSI")
+text=open(r"txt/hlm_ANSI.txt","r",encoding="ANSI")
 mylist = list(text)
-jieba.load_userdict(r"F:/the story of a stone/test/user_dict.txt")
+jieba.load_userdict(r"txt/name_table.txt")
 word_list = ["".join(jieba . cut(sentence)) for sentence in mylist]
 new_text = " " . join(word_list)
 wordcloud = WordCloud(font_path='simhei.ttf',
                       background_color="black") . generate(new_text)
 plt.imshow(wordcloud)
-plt.axis("on")
+plt.axis("off")
 plt . show()
+#使用 pandas 库中的read_csv
+name=pd.read_csv(r"txt/name_table.txt",header=None,names=["name"])
+#
+hlm=pd.read_csv(r"txt/hlm_ANSI.txt",header=None,names=["hlm"],encoding="ANSI")
