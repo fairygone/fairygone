@@ -1,41 +1,30 @@
 import jieba
-import matplotlib.pyplot as plt
-from wordcloud import WordCloud, STOPWORDS
-from imageio import imread
-from PIL import Image
-
-text = open(r"txt/hlm_ANSI.txt", "r", encoding="ANSI")
-list_text = list(text)
-word_list = ["".join(jieba.cut(sentence)) for sentence in list_text]
-new_text = ' '.join(word_list)
-ima_mask = imread(r"image/run_man.jpg")
-wc = WordCloud(font_path='simhei.ttf',
-               max_words=2000, mask=ima_mask,background_color='#ffaaffff',mode="RGBA").generate(new_text)
-plt.imshow(wc)
-plt.axis('off')
-plt.show()
-# 保存到文件
-wc.to_file(r"output/image_wc.png")
-#根据词频生成词云
-import jieba
 from PIL import Image
 from wordcloud import WordCloud, STOPWORDS
 from imageio import imread
 from collections import Counter
 import matplotlib.pyplot as plt
+import chapter_splitwords
 
-text = open(r"txt/hlm_ANSI.txt", "r", encoding="ANSI")
-mylist = list(text)
-word_list = ["".join(jieba.cut(sentence)) for sentence in mylist]
-new_text = ''.join(word_list)
-ima_mask = imread(r"image/run_man.jpg")
-words= [x for x in jieba.cut(new_text)]
+hlm_df=chapter_splitwords.splitchapter()
+ima_mask = imread(r"image/ninja.jpg")
+for c in range(3):
+    words=hlm_df.splitwords[c]
+    frequency =Counter(words).most_common(30)
+    freq =dict(frequency)
+    wc =WordCloud(font_path="simhei.ttf",background_color="white",max_words=2000,mask=ima_mask).fit_words(freq)
+    plt.imshow(wc)
+    plt.axis('off')
+    plt.title(c+1)
+    plt.show()
+    wc.to_file(r"output/image_wc_freq.png")
 
-frequency =Counter(words).most_common()
-freq =dict(frequency)
-wc =WordCloud(font_path="simhei.ttf",background_color="white",max_words=2000,mask=ima_mask).fit_words(freq)
-plt.imshow(wc)
-plt.axis('off')
-plt.show()
-wc.to_file(r"output/image_wc_freq.png")
-
+    name_list_sort = []
+    name_list_count = []
+    for k, v in frequency:
+        name_list_sort.append(k)
+        name_list_count.append(v)
+    plt.rcParams['font.sans-serif'] = ['SimHei']
+    plt.pie( name_list_count,labels=name_list_sort,autopct='%.2f')
+    plt.title("词频")
+    plt.show()

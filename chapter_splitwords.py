@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 # 对《红楼梦》全文进行分词
 
+
 def splitchapter():
     stopwords = chapter_df.get_chapter_df()[3]
     # 数据表的行数
@@ -11,15 +12,27 @@ def splitchapter():
     row, ___ = hlm_df.shape
     hlm_df['splitwords'] = 'splitwords'
     for i in np.arange(row):
-    # 分词,首先将每一章 的分词结果作为一个列表，然后转化为 pandas 中的 series （序列)
-        splitwords = jieba.lcut(hlm_df.artical[i], cut_all=True)
+        # 分词,首先将每一章 的分词结果作为一个列表，然后转化为 pandas 中的 series （序列)
+        splitwords = jieba.lcut_for_search(hlm_df.artical[i])
     # ＃去除长度为 1 的词
-        splitwords = pd.Series(splitwords)[pd.Series(splitwords).apply(len) > 1]
+        splitwords = pd.Series(splitwords)[
+            pd.Series(splitwords).apply(len) > 1]
     # 去除停用词
         splitwords = splitwords[~splitwords.isin(stopwords)]
     # 将每一章 的词语组成列表，放入 Pandas 的 DataFrame 中 。
         hlm_df.splitwords[i] = splitwords.values
     # print(splitwords)
     # print(splitwords.values)
-    hlm_df.splitwords
+    # hlm_df.splitwords
+    hlm_df.to_csv(r"output/csv/chapter_splitwords.csv", encoding="ANSI")
     return hlm_df
+
+
+def main():
+    hlm_df = splitchapter()
+    print(hlm_df.splitwords)
+    # ＃连接 list
+
+
+if __name__ == "__main__":
+    main()
